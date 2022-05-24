@@ -1,0 +1,323 @@
+%% /emp_calc/STS-mask
+%% cd /home/silashn/emp_calc/STS-ImpExp_mask
+
+%% create STS mask
+
+% reslice (nearest & trilinear)
+system(['mri_convert -rt nearest -rl brain.nii rctx_rh_S_temporal_sup.nii rctx_rh_S_temporal_sup_resliced_nearest.nii']); % reslice nearest
+system(['mri_convert -rl brain.nii rctx_rh_S_temporal_sup.nii rctx_rh_S_temporal_sup_resliced_trilin.nii']); % reslice trilinear
+
+% vol > 0
+tmp = MRIread('rctx_rh_S_temporal_sup_resliced_trilin.nii');
+vol = tmp.vol;
+vol = single(vol>0);
+tmp.vol = vol;
+MRIwrite(tmp,'rctx_rh_S_temporal_sup_resliced_trilin_mask.nii','float');
+
+% test STS mask (vol>0)
+system(['mri_vol2surf --mov /home/silashn/emp_calc/STS-ImpExp_mask/rctx_rh_S_temporal_sup_resliced_trilin_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_rctx_rh_S_temporal_sup_resliced_trilin_mask.mgh']);
+
+%% create ImpExpPain1 vol mask
+system(['mri_convert -rt nearest -rl brain.nii ImpExpPain1.nii ImpExpPain1_resliced_nearest.nii']); % reslice nearest
+system(['mri_convert -rl brain.nii ImpExpPain1.nii ImpExpPain1_resliced_trilin.nii']); % reslice trilinear
+
+% vol > 0
+clear all;
+tmp = MRIread('ImpExpPain1_resliced_trilin.nii');
+vol = tmp.vol;
+vol = single(vol>0);
+tmp.vol = vol;
+MRIwrite(tmp,'ImpExpPain1_resliced_trilin_mask.nii','float');
+
+% test ImpExpPain1 mask
+system(['mri_vol2surf --mov ImpExpPain1_resliced_trilin_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_ImpExpPain1_resliced_trilin_mask.mgh']);
+
+%% create ImpExpPain2 vol mask
+system(['mri_convert -rt nearest -rl brain.nii ImpExpPain2.nii ImpExpPain2_resliced_nearest.nii']); % reslice nearest
+system(['mri_convert -rl brain.nii ImpExpPain2.nii ImpExpPain2_resliced_trilin.nii']); % reslice trilinear
+system(['mri_convert -rt cubic -rl brain.nii ImpExpPain2.nii ImpExpPain2_resliced_cubic.nii']); % reslice nearest
+
+% trilin: vol > 0
+clear all;
+tmp = MRIread('ImpExpPain2_resliced_trilin.nii');
+vol = tmp.vol;
+vol = single(vol>0);
+tmp.vol = vol;
+MRIwrite(tmp,'ImpExpPain2_resliced_trilin_mask.nii','float');
+
+% cubic: vol > 0
+clear all;
+tmp = MRIread('ImpExpPain2_resliced_cubic.nii');
+vol = tmp.vol;
+vol = single(vol>0);
+tmp.vol = vol;
+MRIwrite(tmp,'ImpExpPain2_resliced_cubic_mask.nii','float');
+
+% test ImpExpPain1 mask
+system(['mri_vol2surf --mov ImpExpPain2_resliced_trilin_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_ImpExpPain2_resliced_trilin_mask.mgh']);
+
+system(['mri_vol2surf --mov ImpExpPain2_resliced_cubic_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_ImpExpPain2_resliced_cubic_mask.mgh']);
+
+system(['mri_vol2surf --mov ImpExpPain2_resliced_nearest.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_ImpExpPain2_resliced_nearest.mgh']);
+
+%% create STS * ImpExpPain1 mask
+% ImpExpPain1
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='STS-ImpExpPain1_mask.nii';
+spm_write_vol(vout,Yo);
+
+% map STS * ImpExpPain1 mask to surf (fsaverage)
+system(['mri_vol2surf --mov STS-ImpExpPain1_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_STS-ImpExpPain1_mask.mgh']);
+
+% ImpExpPain2
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='STS-ImpExpPain2_mask.nii';
+spm_write_vol(vout,Yo);
+
+% map STS * ImpExpPain2 mask to surf (fsaverage)
+system(['mri_vol2surf --mov STS-ImpExpPain2_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_STS-ImpExpPain2_mask.mgh']);
+
+%% map betas of ImpPain1 and ExpPain1 in STS-ImpExpPain1 mask
+
+% fslmaths brain.nii -mul 1.0 brain_float.nii
+
+% reslice beta_ImpPain1
+system(['mri_convert -rl brain_float.nii.gz beta_ImpPain1.nii beta_ImpPain1_resliced_trilin.nii']); % reslice trilinear
+system(['mri_convert -rl brain_float.nii.gz beta_ExpPain1.nii beta_ExpPain1_resliced_trilin.nii']); % reslice trilinear
+
+% vol > 0
+% clear all;
+% tmp = MRIread('beta_ImpPain1_resliced_trilin.nii');
+% vol = tmp.vol;
+% vol = single(vol>0);
+% tmp.vol = vol;
+% MRIwrite(tmp,'beta_ImpPain1_resliced_trilin_mask.nii','float');
+
+% ImpPain1: masked_beta = resampled_beta.*resampled_mask;
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='beta_ImpPain1_resliced_trilin_STS-ImpExpPain1_mask.nii';
+spm_write_vol(vout,Yo);
+% '/home/silashn/emp_calc/STS-ImpExp_mask/beta_ImpPain1_resliced_trilin.nii'
+% '/home/silashn/emp_calc/STS-ImpExp_mask/STS-ImpExpPain1_mask.nii
+
+% map betas * STS-ImpExpPain1 mask to surf (fsaverage)
+system(['mri_vol2surf --mov beta_ImpPain1_resliced_trilin_STS-ImpExpPain1_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_beta_ImpPain1_resliced_trilin_STS-ImpExpPain1_mask.mgh']);
+
+% ExpPain1: masked_beta = resampled_beta.*resampled_mask;
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='beta_ExpPain1_resliced_trilin_STS-ImpExpPain1_mask.nii';
+spm_write_vol(vout,Yo);
+% '/home/silashn/emp_calc/STS-ImpExp_mask/beta_ImpPain2_resliced_trilin.nii'
+% '/home/silashn/emp_calc/STS-ImpExp_mask/STS-ImpExpPain1_mask.nii
+
+% map betas * STS-ImpExpPain1 mask to surf (fsaverage)
+system(['mri_vol2surf --mov beta_ExpPain1_resliced_trilin_STS-ImpExpPain1_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_beta_ExpPain1_resliced_trilin_STS-ImpExpPain1_mask.mgh']);
+
+%% map betas of ImpPain2 and ExpPain2 in STS-ImpExpPain2 mask
+
+% fslmaths brain.nii -mul 1.0 brain_float.nii
+
+% reslice beta_ImpPain2
+system(['mri_convert -rl brain_float.nii.gz beta_ImpPain2.nii beta_ImpPain2_resliced_trilin.nii']); % reslice trilinear
+system(['mri_convert -rl brain_float.nii.gz beta_ExpPain2.nii beta_ExpPain2_resliced_trilin.nii']); % reslice trilinear
+
+% vol > 0
+% clear all;
+% tmp = MRIread('beta_ImpPain2_resliced_trilin.nii');
+% vol = tmp.vol;
+% vol = single(vol>0);
+% tmp.vol = vol;
+% MRIwrite(tmp,'beta_ImpPain2_resliced_trilin_mask.nii','float');
+
+% ImpPain2: masked_beta = resampled_beta.*resampled_mask;
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='beta_ImpPain2_resliced_trilin_STS-ImpExpPain2_mask.nii';
+spm_write_vol(vout,Yo);
+% '/home/silashn/emp_calc/STS-ImpExp_mask/beta_ImpPain2_resliced_trilin.nii'
+% '/home/silashn/emp_calc/STS-ImpExp_mask/STS-ImpExpPain2_mask.nii
+
+% map betas * STS-ImpExpPain2 mask to surf (fsaverage)
+system(['mri_vol2surf --mov beta_ImpPain2_resliced_trilin_STS-ImpExpPain2_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_beta_ImpPain2_resliced_trilin_STS-ImpExpPain2_mask.mgh']);
+
+% ExpPain2: masked_beta = resampled_beta.*resampled_mask;
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='beta_ExpPain2_resliced_trilin_STS-ImpExpPain2_mask.nii';
+spm_write_vol(vout,Yo);
+% '/home/silashn/emp_calc/STS-ImpExp_mask/beta_ImpPain2_resliced_trilin.nii'
+% '/home/silashn/emp_calc/STS-ImpExp_mask/STS-ImpExpPain2_mask.nii
+
+% map betas * STS-ImpExpPain2 mask to surf (fsaverage)
+system(['mri_vol2surf --mov beta_ExpPain2_resliced_trilin_STS-ImpExpPain2_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_beta_ExpPain2_resliced_trilin_STS-ImpExpPain2_mask.mgh']);
+
+%% calc voxelwise correlation
+
+% linear
+clear all;
+tmp1 = MRIread('beta_ImpPain1_resliced_trilin_STS-ImpExpPain1_mask.nii');
+vol1 = tmp1.vol;
+vol1 = vol1(vol1>0);
+tmp1.vol1 = vol1;
+MRIwrite(tmp1,'beta_pos_ImpPain1_masked.nii','float');
+
+tmp2 = MRIread('beta_ExpPain1_resliced_trilin_STS-ImpExpPain1_mask.nii');
+vol2 = tmp2.vol;
+vol2 = vol2(vol2>0);
+tmp2.vol2 = vol2;
+MRIwrite(tmp2,'beta_pos_ExpPain1_masked.nii','float');
+
+corr(vol1,vol2)
+plot(vol1,vol2,'x')
+vol12 = [vol1 vol2];
+csvwrite('ImpPain1_ExpPain1_beta_pos_masked.csv',vol12);
+
+%% non-linear
+clear all;
+tmp3 = MRIread('beta_ImpPain2_resliced_trilin_STS-ImpExpPain2_mask.nii');
+vol3 = tmp3.vol;
+vol3 = vol3(vol3>0);
+tmp3.vol3 = vol3;
+MRIwrite(tmp3,'beta_pos_ImpPain2_masked.nii','float');
+
+tmp4 = MRIread('beta_ExpPain2_resliced_trilin_STS-ImpExpPain2_mask.nii');
+vol4 = tmp4.vol;
+vol4 = vol4(vol4>0);
+tmp4.vol4 = vol4;
+MRIwrite(tmp4,'beta_pos_ExpPain2_masked.nii','float');
+
+corr(vol3,vol4)
+plot(vol3,vol4,'x')
+vol34 = [vol3 vol4];
+csvwrite('ImpPain2_ExpPain2_beta_pos_masked.csv',vol34);
+
+%% Not operations masks
+
+system(['mri_convert -rl brain.nii ImpExpPain_Linear_Not_NonLinear.nii ImpExpPain_Linear_Not_NonLinear_resliced_trilin.nii']); % reslice trilinear
+system(['mri_convert -rl brain.nii ImpExpPain_Nonlinear_Not_Linear.nii ImpExpPain_NonLinear_Not_linear_resliced_trilin.nii']); % reslice trilinear
+system(['mri_convert -rl brain.nii ImpExpPain1_2.nii ImpExpPain1_2_resliced_trilin.nii']); % reslice trilinear
+
+% vol > 0
+clear all;
+tmp = MRIread('ImpExpPain1_2_resliced_trilin.nii');
+vol = tmp.vol;
+vol = single(vol>0);
+tmp.vol = vol;
+MRIwrite(tmp,'ImpExpPain1_2_resliced_trilin_mask.nii','float');
+
+clear all;
+tmp = MRIread('ImpExpPain_NonLinear_Not_linear_resliced_trilin.nii');
+vol = tmp.vol;
+vol = single(vol>0);
+tmp.vol = vol;
+MRIwrite(tmp,'ImpExpPain_NonLinear_Not_linear_resliced_trilin_mask.nii','float');
+
+clear all;
+tmp = MRIread('ImpExpPain_Linear_Not_NonLinear_resliced_trilin.nii');
+vol = tmp.vol;
+vol = single(vol>0);
+tmp.vol = vol;
+MRIwrite(tmp,'ImpExpPain_Linear_Not_NonLinear_resliced_trilin_mask.nii','float');
+
+
+%% create STS * Not operations mask
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='STS-ImpExpPain_Linear_Not_NonLinear_resliced_trilin_mask.nii';
+spm_write_vol(vout,Yo);
+
+system(['mri_vol2surf --mov STS-ImpExpPain_Linear_Not_NonLinear_resliced_trilin_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_STS-ImpExpPain_Linear_Not_NonLinear_resliced_trilin_mask.mgh']);
+
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='STS-ImpExpPain_NonLinear_Not_linear_resliced_trilin_mask.nii';
+spm_write_vol(vout,Yo);
+
+system(['mri_vol2surf --mov STS-ImpExpPain_NonLinear_Not_linear_resliced_trilin_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_STS-ImpExpPain_NonLinear_Not_linear_resliced_trilin_mask.mgh']);
+
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+Yo=double(Y(:,:,:,1).*Y(:,:,:,2));
+vout=v(1);
+vout.fname='STS-ImpExpPain1_2_mask.nii';
+spm_write_vol(vout,Yo);
+
+system(['mri_vol2surf --mov STS-ImpExpPain1_2_mask.nii --reg brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o /home/silashn/emp_calc/STS-ImpExp_mask/fsavg_overlays/fsavg_STS-ImpExpPain1_2_mask.mgh']);
+
+%%
+STS-ImpExpPain_Linear_Not_NonLinear_resliced_trilin_mask.nii
+
+STS-ImpExpPain_NonLinear_Not_linear_resliced_trilin_mask.nii
+
+STS-ImpExpPain1_2_mask.nii
+
+
+%% create STS * Not operations mask (after mapping to fsaverage)
+
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+th=3.25789;
+Yo=double(Y(:,:,:,1)&~Y(:,:,:,2));
+vout=v(1);
+vout.fname='/home/silashn/emp_calc/map_not_operations/new_fsavg_STS-ImpExpPain_Linear_Not_NonLinear_resliced_trilin_mask.mgh';
+spm_write_vol(vout,Yo);
+
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+th=3.25789;
+Yo=double(Y(:,:,:,1)&~Y(:,:,:,2));
+vout=v(1);
+vout.fname='/home/silashn/emp_calc/map_not_operations/new_fsavg_STS-ImpExpPain_NonLinear_Not_linear_resliced_trilin_mask.mgh';
+spm_write_vol(vout,Yo);
+
+clear all;
+fn=spm_select
+v=spm_vol(fn);
+Y=spm_read_vols(v);
+th=3.25789;
+Yo=double(Y(:,:,:,1)&Y(:,:,:,2));
+vout=v(1);
+vout.fname='/home/silashn/emp_calc/map_not_operations/new_fsavg_STS-ImpExpPain1_2_mask.mgh';
+spm_write_vol(vout,Yo);
