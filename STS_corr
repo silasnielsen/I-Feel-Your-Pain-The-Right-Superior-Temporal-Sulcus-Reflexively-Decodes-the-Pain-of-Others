@@ -1,0 +1,581 @@
+## /map_operations/finalscript
+%% create ImpExpPain1 STS masked vol
+
+% reslice vol label ImpExpPain1
+system(['mri_convert -rt nearest -rl ../brain_float.nii.gz th_ImpPain1_and_ExpPain1.nii th_ImpPain1_and_ExpPain1_rl-nearest.nii']); % reslice nearest
+
+%% mask STS linear
+clear all;
+V1=spm_vol('th_ImpPain1_and_ExpPain1_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1.nii';
+spm_write_vol(vout,Yo);
+
+% rctx_rh_S_temporal_sup_resliced_trilin_mask_MASKED2.nii
+clear all;
+V1=spm_vol('th_ImpPain1_and_ExpPain1_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask_MASKED2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED2.nii';
+spm_write_vol(vout,Yo);
+
+% MASKED3
+clear all;
+V1=spm_vol('th_ImpPain1_and_ExpPain1_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask_MASKED3.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED3.nii';
+spm_write_vol(vout,Yo);
+
+% MASKED4
+clear all;
+V1=spm_vol('th_ImpPain1_and_ExpPain1_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask_MASKED4.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED4.nii';
+spm_write_vol(vout,Yo);
+
+%% mask STS non-linear
+
+% reslice vol label ImpExpPain1
+system(['mri_convert -rt nearest -rl ../brain_float.nii.gz th_ImpPain2_and_ExpPain2.nii th_ImpPain2_and_ExpPain2_rl-nearest.nii']); % reslice nearest
+
+% mask STS
+clear all;
+V1=spm_vol('th_ImpPain2_and_ExpPain2_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2.nii';
+spm_write_vol(vout,Yo);
+
+% 2
+clear all;
+V1=spm_vol('th_ImpPain2_and_ExpPain2_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask_MASKED2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED2.nii';
+spm_write_vol(vout,Yo);
+
+% 3
+clear all;
+V1=spm_vol('th_ImpPain2_and_ExpPain2_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask_MASKED3.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED3.nii';
+spm_write_vol(vout,Yo);
+
+% 4
+clear all;
+V1=spm_vol('th_ImpPain2_and_ExpPain2_rl-nearest.nii');
+V2=spm_vol('rctx_rh_S_temporal_sup_resliced_trilin_mask_MASKED4.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED4.nii';
+spm_write_vol(vout,Yo);
+
+%% thresholding (wrong step!!!)
+
+% threshold above 0 (remove NaNs)
+clear all;
+V=spm_vol('beta_ImpPain1.nii');
+Y=spm_read_vols(V);
+th=0;
+Yo=Y(:,:,:)>th;
+vout=V(1);
+vout.fname='beta_th_ImpPain1.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V=spm_vol('beta_ImpPain2.nii');
+Y=spm_read_vols(V);
+th=0;
+Yo=Y(:,:,:)>th;
+vout=V(1);
+vout.fname='beta_th_ImpPain2.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V=spm_vol('beta_ExpPain1.nii');
+Y=spm_read_vols(V);
+th=0;
+Yo=Y(:,:,:)>th;
+vout=V(1);
+vout.fname='beta_th_ExpPain1.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V=spm_vol('beta_ExpPain2.nii');
+Y=spm_read_vols(V);
+th=0;
+Yo=Y(:,:,:)>th;
+vout=V(1);
+vout.fname='beta_th_ExpPain2.nii';
+spm_write_vol(vout,Yo);
+
+%% ImpPain1
+
+% reslice betas
+system(['mri_convert -rl ../brain_float.nii.gz beta_ImpPain1.nii beta_ImpPain1_rl-trilin.nii']); % reslice trilinear
+
+% mask betas
+clear all;
+V1=spm_vol('beta_ImpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain1_masked_STS-ImpExp1.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ImpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain1_masked_STS-ImpExp1_MASKED2.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ImpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED3.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain1_masked_STS-ImpExp1_MASKED3.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ImpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED4.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain1_masked_STS-ImpExp1_MASKED4.nii';
+spm_write_vol(vout,Yo);
+
+%% ExpPain1
+
+% reslice betas
+system(['mri_convert -rl ../brain_float.nii.gz beta_ExpPain1.nii beta_ExpPain1_rl-trilin.nii']); % reslice trilinear
+
+% mask betas
+clear all;
+V1=spm_vol('beta_ExpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain1_masked_STS-ImpExp1.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ExpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain1_masked_STS-ImpExp1.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ExpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain1_masked_STS-ImpExp1_MASKED2.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ExpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED3.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain1_masked_STS-ImpExp1_MASKED3.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ExpPain1_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED4.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain1_masked_STS-ImpExp1_MASKED4.nii';
+spm_write_vol(vout,Yo);
+
+%% ImpPain2
+
+system(['mri_convert -rl ../brain_float.nii.gz beta_ImpPain2.nii beta_ImpPain2_rl-trilin.nii']); % reslice trilinear
+
+% mask betas
+clear all;
+V1=spm_vol('beta_ImpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain2_masked_STS-ImpExp2.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ImpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain2_masked_STS-ImpExp2_MASKED2.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ImpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED3.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain2_masked_STS-ImpExp2_MASKED3.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ImpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED4.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ImpPain2_masked_STS-ImpExp2_MASKED4.nii';
+spm_write_vol(vout,Yo);
+
+%% ExpPain2
+
+system(['mri_convert -rl ../brain_float.nii.gz beta_ExpPain2.nii beta_ExpPain2_rl-trilin.nii']); % reslice trilinear
+
+% mask betas
+clear all;
+V1=spm_vol('beta_ExpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain2_masked_STS-ImpExp2.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ExpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED2.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain2_masked_STS-ImpExp2_MASKED2.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ExpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED3.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain2_masked_STS-ImpExp2_MASKED3.nii';
+spm_write_vol(vout,Yo);
+
+clear all;
+V1=spm_vol('beta_ExpPain2_rl-trilin.nii');
+V2=spm_vol('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED4.nii');
+Y1=spm_read_vols(V1);
+Y2=spm_read_vols(V2);
+Yo=double(Y1(:,:,:).*Y2(:,:,:));
+vout=V1(1);
+vout.fname='beta_ExpPain2_masked_STS-ImpExp2_MASKED4.nii';
+spm_write_vol(vout,Yo);
+
+%% Extract raw beta values from ROI's (STS -> ImpExp1 and ImpExp2)
+
+%% ImpPain1
+
+% full
+clear all;
+tmp_mask_ImpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1.nii');
+tmp_ImpPain1 = MRIread('beta_ImpPain1_masked_STS-ImpExp1.nii');
+vol_ImpPain1 = tmp_ImpPain1.vol;
+vol_mask_ImpPain1 = tmp_mask_ImpPain1.vol;
+vol_mask_ImpPain1 = vol_ImpPain1(vol_mask_ImpPain1>0);
+tmp1.vol_ImpPain1 = vol_mask_ImpPain1;
+MRIwrite(tmp_ImpPain1,'beta_pos_ImpPain1_masked_STS-ImpExp1.nii','float');
+csvwrite('beta_pos_ImpPain1_masked_STS_ImpExp1.csv',vol_mask_ImpPain1)
+
+% m2
+clear all;
+tmp_mask_ImpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED2.nii');
+tmp_ImpPain1 = MRIread('beta_ImpPain1_masked_STS-ImpExp1_MASKED2.nii');
+vol_ImpPain1 = tmp_ImpPain1.vol;
+vol_mask_ImpPain1 = tmp_mask_ImpPain1.vol;
+vol_mask_ImpPain1 = vol_ImpPain1(vol_mask_ImpPain1>0);
+tmp1.vol_ImpPain1 = vol_mask_ImpPain1;
+MRIwrite(tmp_ImpPain1,'beta_pos_ImpPain1_masked_STS-ImpExp1_MASKED2.nii','float');
+csvwrite('beta_pos_ImpPain1_masked_STS_ImpExp1_MASKED2.csv',vol_mask_ImpPain1)
+
+% m3
+clear all;
+tmp_mask_ImpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED3.nii');
+tmp_ImpPain1 = MRIread('beta_ImpPain1_masked_STS-ImpExp1_MASKED3.nii');
+vol_ImpPain1 = tmp_ImpPain1.vol;
+vol_mask_ImpPain1 = tmp_mask_ImpPain1.vol;
+vol_mask_ImpPain1 = vol_ImpPain1(vol_mask_ImpPain1>0);
+tmp1.vol_ImpPain1 = vol_mask_ImpPain1;
+MRIwrite(tmp_ImpPain1,'beta_pos_ImpPain1_masked_STS-ImpExp1_MASKED3.nii','float');
+csvwrite('beta_pos_ImpPain1_masked_STS_ImpExp1_MASKED3.csv',vol_mask_ImpPain1)
+
+% m4
+clear all;
+tmp_mask_ImpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED4.nii');
+tmp_ImpPain1 = MRIread('beta_ImpPain1_masked_STS-ImpExp1_MASKED4.nii');
+vol_ImpPain1 = tmp_ImpPain1.vol;
+vol_mask_ImpPain1 = tmp_mask_ImpPain1.vol;
+vol_mask_ImpPain1 = vol_ImpPain1(vol_mask_ImpPain1>0);
+tmp1.vol_ImpPain1 = vol_mask_ImpPain1;
+MRIwrite(tmp_ImpPain1,'beta_pos_ImpPain1_masked_STS-ImpExp1_MASKED4.nii','float');
+csvwrite('beta_pos_ImpPain1_masked_STS_ImpExp1_MASKED4.csv',vol_mask_ImpPain1)
+
+%% ExpPain1
+
+% full
+clear all;
+tmp_mask_ExpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1.nii');
+tmp_ExpPain1 = MRIread('beta_ExpPain1_masked_STS-ImpExp1.nii');
+vol_ExpPain1 = tmp_ExpPain1.vol;
+vol_mask_ExpPain1 = tmp_mask_ExpPain1.vol;
+vol_mask_ExpPain1 = vol_ExpPain1(vol_mask_ExpPain1>0);
+tmp1.vol_ExpPain1 = vol_mask_ExpPain1;
+MRIwrite(tmp_ExpPain1,'beta_pos_ExpPain1_masked_STS-ImpExp1.nii','float');
+csvwrite('beta_pos_ExpPain1_masked_STS_ImpExp1.csv',vol_mask_ExpPain1)
+
+% m2
+clear all;
+tmp_mask_ExpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED2.nii');
+tmp_ExpPain1 = MRIread('beta_ExpPain1_masked_STS-ImpExp1_MASKED2.nii');
+vol_ExpPain1 = tmp_ExpPain1.vol;
+vol_mask_ExpPain1 = tmp_mask_ExpPain1.vol;
+vol_mask_ExpPain1 = vol_ExpPain1(vol_mask_ExpPain1>0);
+tmp1.vol_ExpPain1 = vol_mask_ExpPain1;
+MRIwrite(tmp_ExpPain1,'beta_pos_ExpPain1_masked_STS-ImpExp1_MASKED2.nii','float');
+csvwrite('beta_pos_ExpPain1_masked_STS_ImpExp1_MASKED2.csv',vol_mask_ExpPain1)
+
+% m3
+clear all;
+tmp_mask_ExpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED3.nii');
+tmp_ExpPain1 = MRIread('beta_ExpPain1_masked_STS-ImpExp1_MASKED3.nii');
+vol_ExpPain1 = tmp_ExpPain1.vol;
+vol_mask_ExpPain1 = tmp_mask_ExpPain1.vol;
+vol_mask_ExpPain1 = vol_ExpPain1(vol_mask_ExpPain1>0);
+tmp1.vol_ExpPain1 = vol_mask_ExpPain1;
+MRIwrite(tmp_ExpPain1,'beta_pos_ExpPain1_masked_STS-ImpExp1_MASKED3.nii','float');
+csvwrite('beta_pos_ExpPain1_masked_STS_ImpExp1_MASKED3.csv',vol_mask_ExpPain1)
+
+% m4
+clear all;
+tmp_mask_ExpPain1 = MRIread('th_rl-nearest_masked-STS_ImpPain1_and_ExpPain1_MASKED4.nii');
+tmp_ExpPain1 = MRIread('beta_ExpPain1_masked_STS-ImpExp1_MASKED4.nii');
+vol_ExpPain1 = tmp_ExpPain1.vol;
+vol_mask_ExpPain1 = tmp_mask_ExpPain1.vol;
+vol_mask_ExpPain1 = vol_ExpPain1(vol_mask_ExpPain1>0);
+tmp1.vol_ExpPain1 = vol_mask_ExpPain1;
+MRIwrite(tmp_ExpPain1,'beta_pos_ExpPain1_masked_STS-ImpExp1_MASKED4.nii','float');
+csvwrite('beta_pos_ExpPain1_masked_STS_ImpExp1_MASKED4.csv',vol_mask_ExpPain1)
+
+%% ImpPain2
+
+% full
+clear all;
+tmp_mask_ImpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2.nii');
+tmp_ImpPain2 = MRIread('beta_ImpPain2_masked_STS-ImpExp2.nii');
+vol_ImpPain2 = tmp_ImpPain2.vol;
+vol_mask_ImpPain2 = tmp_mask_ImpPain2.vol;
+vol_mask_ImpPain2 = vol_ImpPain2(vol_mask_ImpPain2>0);
+tmp2.vol_ImpPain2 = vol_mask_ImpPain2;
+MRIwrite(tmp_ImpPain2,'beta_pos_ImpPain2_masked_STS-ImpExp2.nii','float');
+csvwrite('beta_pos_ImpPain2_masked_STS_ImpExp2.csv',vol_mask_ImpPain2)
+
+% m2
+clear all;
+tmp_mask_ImpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED2.nii');
+tmp_ImpPain2 = MRIread('beta_ImpPain2_masked_STS-ImpExp2_MASKED2.nii');
+vol_ImpPain2 = tmp_ImpPain2.vol;
+vol_mask_ImpPain2 = tmp_mask_ImpPain2.vol;
+vol_mask_ImpPain2 = vol_ImpPain2(vol_mask_ImpPain2>0);
+tmp2.vol_ImpPain2 = vol_mask_ImpPain2;
+MRIwrite(tmp_ImpPain2,'beta_pos_ImpPain2_masked_STS-ImpExp2_MASKED2.nii','float');
+csvwrite('beta_pos_ImpPain2_masked_STS_ImpExp2_MASKED2.csv',vol_mask_ImpPain2)
+
+% m3
+clear all;
+tmp_mask_ImpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED3.nii');
+tmp_ImpPain2 = MRIread('beta_ImpPain2_masked_STS-ImpExp2_MASKED3.nii');
+vol_ImpPain2 = tmp_ImpPain2.vol;
+vol_mask_ImpPain2 = tmp_mask_ImpPain2.vol;
+vol_mask_ImpPain2 = vol_ImpPain2(vol_mask_ImpPain2>0);
+tmp2.vol_ImpPain2 = vol_mask_ImpPain2;
+MRIwrite(tmp_ImpPain2,'beta_pos_ImpPain2_masked_STS-ImpExp2_MASKED3.nii','float');
+csvwrite('beta_pos_ImpPain2_masked_STS_ImpExp2_MASKED3.csv',vol_mask_ImpPain2)
+
+% m4
+clear all;
+tmp_mask_ImpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED4.nii');
+tmp_ImpPain2 = MRIread('beta_ImpPain2_masked_STS-ImpExp2_MASKED4.nii');
+vol_ImpPain2 = tmp_ImpPain2.vol;
+vol_mask_ImpPain2 = tmp_mask_ImpPain2.vol;
+vol_mask_ImpPain2 = vol_ImpPain2(vol_mask_ImpPain2>0);
+tmp2.vol_ImpPain2 = vol_mask_ImpPain2;
+MRIwrite(tmp_ImpPain2,'beta_pos_ImpPain2_masked_STS-ImpExp2_MASKED4.nii','float');
+csvwrite('beta_pos_ImpPain2_masked_STS_ImpExp2_MASKED4.csv',vol_mask_ImpPain2)
+
+%% ExpPain2
+
+% full
+clear all;
+tmp_mask_ExpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2.nii');
+tmp_ExpPain2 = MRIread('beta_ExpPain2_masked_STS-ImpExp2.nii');
+vol_ExpPain2 = tmp_ExpPain2.vol;
+vol_mask_ExpPain2 = tmp_mask_ExpPain2.vol;
+vol_mask_ExpPain2 = vol_ExpPain2(vol_mask_ExpPain2>0);
+tmp2.vol_ExpPain2 = vol_mask_ExpPain2;
+MRIwrite(tmp_ExpPain2,'beta_pos_ExpPain2_masked_STS-ImpExp2.nii','float');
+csvwrite('beta_pos_ExpPain2_masked_STS_ImpExp2.csv',vol_mask_ExpPain2)
+
+% m2
+clear all;
+tmp_mask_ExpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED2.nii');
+tmp_ExpPain2 = MRIread('beta_ExpPain2_masked_STS-ImpExp2_MASKED2.nii');
+vol_ExpPain2 = tmp_ExpPain2.vol;
+vol_mask_ExpPain2 = tmp_mask_ExpPain2.vol;
+vol_mask_ExpPain2 = vol_ExpPain2(vol_mask_ExpPain2>0);
+tmp2.vol_ExpPain2 = vol_mask_ExpPain2;
+MRIwrite(tmp_ExpPain2,'beta_pos_ExpPain2_masked_STS-ImpExp2_MASKED2.nii','float');
+csvwrite('beta_pos_ExpPain2_masked_STS_ImpExp2_MASKED2.csv',vol_mask_ExpPain2)
+
+% m3
+clear all;
+tmp_mask_ExpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED3.nii');
+tmp_ExpPain2 = MRIread('beta_ExpPain2_masked_STS-ImpExp2_MASKED3.nii');
+vol_ExpPain2 = tmp_ExpPain2.vol;
+vol_mask_ExpPain2 = tmp_mask_ExpPain2.vol;
+vol_mask_ExpPain2 = vol_ExpPain2(vol_mask_ExpPain2>0);
+tmp2.vol_ExpPain2 = vol_mask_ExpPain2;
+MRIwrite(tmp_ExpPain2,'beta_pos_ExpPain2_masked_STS-ImpExp2_MASKED3.nii','float');
+csvwrite('beta_pos_ExpPain2_masked_STS_ImpExp2_MASKED3.csv',vol_mask_ExpPain2)
+
+% m4
+clear all;
+tmp_mask_ExpPain2 = MRIread('th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED4.nii');
+tmp_ExpPain2 = MRIread('beta_ExpPain2_masked_STS-ImpExp2_MASKED4.nii');
+vol_ExpPain2 = tmp_ExpPain2.vol;
+vol_mask_ExpPain2 = tmp_mask_ExpPain2.vol;
+vol_mask_ExpPain2 = vol_ExpPain2(vol_mask_ExpPain2>0);
+tmp2.vol_ExpPain2 = vol_mask_ExpPain2;
+MRIwrite(tmp_ExpPain2,'beta_pos_ExpPain2_masked_STS-ImpExp2_MASKED4.nii','float');
+csvwrite('beta_pos_ExpPain2_masked_STS_ImpExp2_MASKED4.csv',vol_mask_ExpPain2)
+
+
+%% create output files for JASP - ImpPain2, ExpPain2, ImpPain1, ExpPain1
+
+%%
+
+m1_ImpPain1 = csvread('beta_pos_ImpPain1_masked_STS_ImpExp1.csv');
+m1_ExpPain1 = csvread('beta_pos_ExpPain1_masked_STS_ImpExp1.csv');
+m1_ImpPain2 = csvread('beta_pos_ImpPain2_masked_STS_ImpExp2.csv');
+m1_ExpPain2 = csvread('beta_pos_ExpPain2_masked_STS_ImpExp2.csv');
+
+% masked2
+%load beta_pos_ImpPain1_masked_STS_ImpExp1_MASKED2.csv
+%load beta_pos_ExpPain1_masked_STS_ImpExp1_MASKED2.csv
+%load beta_pos_ImpPain2_masked_STS_ImpExp2_MASKED2.csv
+%load beta_pos_ExpPain2_masked_STS_ImpExp2_MASKED2.csv
+
+m2_ImpPain1 = csvread('beta_pos_ImpPain1_masked_STS_ImpExp1_MASKED2.csv');
+m2_ExpPain1 = csvread('beta_pos_ExpPain1_masked_STS_ImpExp1_MASKED2.csv');
+m2_ImpPain2 = csvread('beta_pos_ImpPain2_masked_STS_ImpExp2_MASKED2.csv');
+m2_ExpPain2 = csvread('beta_pos_ExpPain2_masked_STS_ImpExp2_MASKED2.csv');
+
+% masked3
+
+m3_ImpPain1 = csvread('beta_pos_ImpPain1_masked_STS_ImpExp1_MASKED3.csv');
+m3_ExpPain1 = csvread('beta_pos_ExpPain1_masked_STS_ImpExp1_MASKED3.csv');
+m3_ImpPain2 = csvread('beta_pos_ImpPain2_masked_STS_ImpExp2_MASKED3.csv');
+m3_ExpPain2 = csvread('beta_pos_ExpPain2_masked_STS_ImpExp2_MASKED3.csv');
+
+% masked4
+
+m4_ImpPain1 = csvread('beta_pos_ImpPain1_masked_STS_ImpExp1_MASKED4.csv');
+m4_ExpPain1 = csvread('beta_pos_ExpPain1_masked_STS_ImpExp1_MASKED4.csv');
+m4_ImpPain2 = csvread('beta_pos_ImpPain2_masked_STS_ImpExp2_MASKED4.csv');
+m4_ExpPain2 = csvread('beta_pos_ExpPain2_masked_STS_ImpExp2_MASKED4.csv');
+
+% write file
+%%
+%output_masked = [m1_ImpPain1,m1_ExpPain1,m1_ImpPain2,m1_ExpPain2,m2_ImpPain1,m2_ExpPain1,m2_ImpPain2,m2_ExpPain2,m3_ImpPain1,m3_ExpPain2,m3_ImpPain2,m3_ExpPain2,m4_ImpPain1,m4_ExpPain1,m4_ImpPain2,m4_ExpPain2];
+
+m1_ImpExp1=[m1_ImpPain1,m1_ExpPain1];
+csvwrite('m1_ImpExp1.csv', m1_ImpExp1);
+
+m1_ImpExp2=[m1_ImpPain2,m1_ExpPain2];
+csvwrite('m1_ImpExp2.csv', m1_ImpExp2);
+
+m2_ImpExp1=[m2_ImpPain1,m2_ExpPain1];
+csvwrite('m2_ImpExp1.csv', m2_ImpExp1);
+
+m2_ImpExp2=[m2_ImpPain2,m2_ExpPain2];
+csvwrite('m2_ImpExp2.csv', m2_ImpExp2);
+
+m3_ImpExp1=[m3_ImpPain1,m3_ExpPain1];
+csvwrite('m3_ImpExp1.csv', m3_ImpExp1);
+
+m3_ImpExp2=[m3_ImpPain2,m3_ExpPain2];
+csvwrite('m3_ImpExp2.csv', m3_ImpExp2);
+
+m4_ImpExp1=[m4_ImpPain1,m4_ExpPain1];
+csvwrite('m4_ImpExp1.csv', m4_ImpExp1);
+
+m4_ImpExp2=[m4_ImpPain2,m4_ExpPain2];
+csvwrite('m4_ImpExp2.csv', m4_ImpExp2);
+
+%%
+csvwrite(PPP_allcsv, output_masked);
