@@ -1,9 +1,0 @@
-#$Id: Colortable_3maps
-
-#No. Label Name:                            R   G   B   A
-
-    0 Seg0      0   0   0   0
-    1 Seg1     0 0 255   0
-    2 Seg2    255 0 0   0
-    3 Seg3    255  0  255   0
-
