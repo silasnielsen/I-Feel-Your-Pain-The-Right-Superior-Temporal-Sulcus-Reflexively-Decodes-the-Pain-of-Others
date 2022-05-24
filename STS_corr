@@ -97,45 +97,6 @@ vout=V1(1);
 vout.fname='th_rl-nearest_masked-STS_ImpPain2_and_ExpPain2_MASKED4.nii';
 spm_write_vol(vout,Yo);
 
-%% thresholding (wrong step!!!)
-
-% threshold above 0 (remove NaNs)
-clear all;
-V=spm_vol('beta_ImpPain1.nii');
-Y=spm_read_vols(V);
-th=0;
-Yo=Y(:,:,:)>th;
-vout=V(1);
-vout.fname='beta_th_ImpPain1.nii';
-spm_write_vol(vout,Yo);
-
-clear all;
-V=spm_vol('beta_ImpPain2.nii');
-Y=spm_read_vols(V);
-th=0;
-Yo=Y(:,:,:)>th;
-vout=V(1);
-vout.fname='beta_th_ImpPain2.nii';
-spm_write_vol(vout,Yo);
-
-clear all;
-V=spm_vol('beta_ExpPain1.nii');
-Y=spm_read_vols(V);
-th=0;
-Yo=Y(:,:,:)>th;
-vout=V(1);
-vout.fname='beta_th_ExpPain1.nii';
-spm_write_vol(vout,Yo);
-
-clear all;
-V=spm_vol('beta_ExpPain2.nii');
-Y=spm_read_vols(V);
-th=0;
-Yo=Y(:,:,:)>th;
-vout=V(1);
-vout.fname='beta_th_ExpPain2.nii';
-spm_write_vol(vout,Yo);
-
 %% ImpPain1
 
 % reslice betas
