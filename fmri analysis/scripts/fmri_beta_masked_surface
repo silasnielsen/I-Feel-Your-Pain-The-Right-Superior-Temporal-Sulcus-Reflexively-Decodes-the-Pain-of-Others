@@ -1,0 +1,68 @@
+%% /fmri
+
+function  write_out_masked_beta_surface( path_to_beta_file )
+%This function takes the path to a beta map, masks it and writes out the
+%resampled map in FreeSurfer surface space to the same folder where the original beta file is.
+%
+% The input should be the full name of the beta file as a string, e.g.,
+% write_out_masked_beta_surface('/mnt/projects/empathy/fmri/analysis/newnew_firstlevel/newnew_onesample/con_0004/beta_0001.nii');
+
+%First add the path to the kvl-library we need to fiddle with the images.
+addpath('/mrhome/oulap/CodeForBasel/Source/GEMS2-compiled/bin/');
+
+%Next read in the beta image
+disp('Reading beta image.')
+im_beta = kvlReadImage(path_to_beta_file);
+beta_buffer = kvlGetImageBuffer(im_beta);
+
+%Then read in the mask. Note: I assume that the mask is in the roi-folder, if it's ever moved this will throw an error.
+disp('Reading mask image.')
+im_mask = kvlReadImage('/mnt/projects/empathy/fmri/analysis/roi_masks/rctx_rh_S_temporal_sup.nii');
+mask_buffer = kvlGetImageBuffer(im_mask);
+
+%Now do the actual masking
+disp('Masking.')
+tmp = beta_buffer.*mask_buffer;
+
+%Write out the temporary masked volume image (which is in the wrong space).
+kvlSetImageBuffer(im_beta,tmp);
+kvlWriteImage(im_beta,'tmp_masked_beta.nii');
+
+%Next resample the temporary masked beta image to the same space as
+%brain.nii. This call puts out an image called
+%tmp_masked_beta_resampled.mgz
+disp('Resampling.')
+system(['kvlResample tmp_masked_beta.nii /mnt/projects/empathy/fmri/analysis/roi_masks/brain.nii']);
+
+%Okay, now read in the resampled image (which is flipped due to some mgz
+%and nifti differences).
+
+im_beta_masked = kvlReadImage('tmp_masked_beta_resampled.mgz');
+buffer_beta_masked = kvlGetImageBuffer(im_beta_masked);
+
+%Read the header from the brain.nii image (which is in the space we want
+%our masked beta to be in).
+
+im_brain = kvlReadImage('/mnt/projects/empathy/fmri/analysis/roi_masks/brain.nii');
+
+%Set the masked beta to the correct space
+kvlSetImageBuffer(im_brain,buffer_beta_masked);
+
+%Write it out
+kvlWriteImage(im_brain,'tmp_beta_masked.nii');
+
+%Figure out the path where to save the final result
+[savePath, beta_name, ext_tmp] = fileparts(path_to_beta_file);
+%Call the FreeSurfer function which interpolates the masked beta volume to
+%the cortical surface
+disp('Interpolating to surface.')
+system(['mri_vol2surf --mov tmp_beta_masked.nii --reg ./transformation/brainregister.lta --projfrac 0.5 --interp nearest --hemi rh --o ' savePath '/' beta_name '_masked.mgh']);
+
+%Clean up all the temporary files we wrote on the disk
+delete 'tmp_masked_beta.nii' 'tmp_beta_masked.nii' 'tmp_masked_beta_resampled.mgz';
+
+%And clear the memory
+kvlClear;
+disp('Done.')
+
+end

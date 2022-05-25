@@ -1,0 +1,205 @@
+% enters onsets and parametric modulations into analysis of empathy fmri
+% data, 1. session
+
+function out=get_onsets_empathy(logno)
+[cdir junk junk]=fileparts(which('get_onsets_empathy')); %what does this do...? (from old script)
+load Subject43_film1_ratinglum_hellescanning.mat %file with stimonsets and lastrate
+load ........%insert name of silas and ollies output file which contains estimated lum/pain ratings
+
+if size(stimonset)<=0
+    error('no onsets');
+end
+
+out(1).name='onsets';
+out(1).onset=stimonset;
+out(1).duration=0;
+out(1).pmod(1).name='target_pain';
+out(1).pmod(1).param=[
+    0.0672
+    0.1796
+    0.2796
+    0.1654
+    0.0751
+    0.2579
+    0.2507
+    0.0214
+    0.1602
+    0.0481
+    0.3772
+    0.0953
+    0.1864
+    0.0773
+    0.3264
+    0.0384
+    0.2647
+    0.3501
+    0.3996
+    0.2186
+    0.0720
+    0.1068
+    0.5086
+    0.1210
+    0.3431
+    0.1897
+    0.4193
+    0.0645
+    0.0896
+    0.3716
+    0.0536
+    0.2513
+    0.2291
+    0.3523
+    0.0730
+    0.1139
+    0.0719
+    0.2839
+    0.1263
+    0.3047
+    0.0634
+    0.1364
+    0.0938
+    0.0857
+    0.2812
+    0.2168
+    0.2464
+    0.1323
+    0.4585
+    0.3739
+    0.2530
+    0.3114
+    0.2283
+    0.1393
+    0.1836
+    0.1862
+    0.1884
+    0.0022
+    0.0302
+    0.3524
+    0.4864
+    0.2982
+    0.2027
+    0.0928
+    0.3655
+    0.1335
+    0.0880
+    0.4492
+    0.2632
+    0.0945
+    0.1974
+    0.1081
+    0.1094
+    0.3060
+    0.4385
+    0.3630
+    0.0633
+    0.1036
+    0.0971
+    0.4467
+    0.0723
+    0.0610
+    0.1938
+    0.2142
+    0.3706
+    0.1839] %target's pain ratings
+out(1).pmod(1).poly=2
+out(1).pmod(2).name='participant_pain';
+out(1).pmod(2).param= %participant's estimated pain ratings...insert from ollie og silas' script
+out(1).pmod(2).poly=2;
+out(1).pmod(3).name='luminance_real';
+out(1).pmod(3).param=[
+    0.0470
+    0.6571
+    0.0217
+    0.0107
+    1.0000
+    0.3307
+    0.0384
+    0.0015
+    0.0145
+    0.0569
+    0.1661
+    0.4646
+    0.5796
+    0.0310
+    0.2674
+    0.6844
+    0.3140
+    0.9648
+    0.0027
+    0.2824
+    0.5552
+    0.0804
+    0.2529
+    0.1360
+    0.0000
+    0.0518
+    0.9304
+    0.0740
+    0.0076
+    0.1019
+    0.0000
+    0.5316
+    0.0245
+    0.0052
+    0.8322
+    0.1556
+    0.8011
+    0.3844
+    0.6305
+    0.0872
+    0.2003
+    0.7124
+    0.0011
+    0.4436
+    0.4035
+    0.4862
+    0.0063
+    0.2979
+    0.1770
+    0.1181
+    0.0003
+    0.0000
+    0.0190
+    0.8641
+    0.7412
+    0.1268
+    0.3480
+    0.0426
+    0.4232
+    0.0622
+    0.7707
+    0.0091
+    0.1098
+    0.0680
+    0.2127
+    0.1884
+    0.2256
+    0.0276
+    0.1455
+    0.0943
+    0.0001
+    0.0020
+    0.2390
+    0.0008
+         0
+    0.0002
+    0.0034
+    0.3659
+    0.6047
+    0.0005
+    0.0166
+    0.5085
+    0.8968
+    0.0125
+    0.0346
+    0.0042] %objective luminance intensities
+out(1).pmod(3).poly=2;
+out(1).pmod(4).name='luminance_participant';
+out(1).pmod(4).param=lastrate; %participant's luminance ratings
+out(1).pmod(4).poly=2;
+
+out(2).name='black'; 
+out(2).onset=wtimes; %onsets for the black screen which is shown twice during the test
+out(2).duration=0;
+
+%helle: change the script so that there are two modes, one like it is now, and one for the second session where participant's luminance ratings are estimated and participant's pain ratings = lastrate
